@@ -1,36 +1,39 @@
 JavaScript QRCode reader for HTML5 enabled browser.
-2011 Lazar Laszlo  http://lazarsoft.info
+forked from Lazar Laszlo ( http://lazarsoft.info )
+at https://github.com/LazarSoft/jsqrcode
+Which was  a port of ZXing qrcode scanner, http://code.google.com/p/zxing.
 
-Try it online: http://webqr.com
+Changes to the original:
+I needed an AMD module, preferably a single file, that I could load in Poodll in Moodle.
+So I simply combined all the files into a (new) single file, poodll_qrscanner.js. In that file I added a few functions that can be called on the AMD module.
 
-This is a port of ZXing qrcode scanner, http://code.google.com/p/zxing.
 
 Usage:
+Its an AMD module so put it in the right place and add code to load it as a dependency to your code at the top of your AMD module. Like this:
+(In Moodle)
+define(['jquery', 'core/log','poodll_qrscanner'], function($, log, scanner) { ..
+(Elsewhere)
+define('poodll_qrscanner'], function(scanner) { ..
 
-Include the scripts in the following order:
 
-<script type="text/javascript" src="grid.js"></script>
-<script type="text/javascript" src="version.js"></script>
-<script type="text/javascript" src="detector.js"></script>
-<script type="text/javascript" src="formatinf.js"></script>
-<script type="text/javascript" src="errorlevel.js"></script>
-<script type="text/javascript" src="bitmat.js"></script>
-<script type="text/javascript" src="datablock.js"></script>
-<script type="text/javascript" src="bmparser.js"></script>
-<script type="text/javascript" src="datamask.js"></script>
-<script type="text/javascript" src="rsdecoder.js"></script>
-<script type="text/javascript" src="gf256poly.js"></script>
-<script type="text/javascript" src="gf256.js"></script>
-<script type="text/javascript" src="decoder.js"></script>
-<script type="text/javascript" src="qrcode.js"></script>
-<script type="text/javascript" src="findpat.js"></script>
-<script type="text/javascript" src="alignpat.js"></script>
-<script type="text/javascript" src="databr.js"></script>
 
-Set qrcode.callback to function "func(data)", where data will get the decoded information.
+Then when you want to use it, put an HTML5 video element on the page and make sure you give it an ID.
+Then in your JS/AMD code:
+scanner.callback=function(data){alert(data);};
+scanner.startWebCam('video_element_id');
+scanner.startScan('video_element_id');
 
-Decode image with: qrcode.decode(url or DataURL).
-Decode from canvas with "qr-canvas" ID: qrcode.decode()
+NOTES:
+i) You can also call:
+scanner.stopWebCam();
+scanner.stopScan();
 
-[new from 2014.01.09]
-For webcam qrcode decoding (included in the test.html) you will need a browser with getUserMedia (WebRTC) capability.
+ii) when the scanner detects and decodes a qrcode the decoded text data will be passed to the function you set in the callback property.
+That is where you will kick off all your interesting stuff.
+
+iii) I seperated the scan and webcam logic completely. So its possible to have your own webcam capture code and just pass the id of the video element you use there to the startScan function.
+ You could even play a video with QR codes in the video element and then they would scan .....if you wanted to do that....but why ?
+
+iv) This was written for use in Poodll on Moodle and there we use the nice logging functions available in that environment. Its the only dependency we added. It doesn't even use jquery.
+ So if you want to use this elsewhere, just replace all calls to log.debug() with calls to console.log() in poodll_qrscanner.js
+
