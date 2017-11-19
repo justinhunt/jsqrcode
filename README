@@ -35,5 +35,7 @@ iii) I seperated the scan and webcam logic completely. So its possible to have y
  You could even play a video with QR codes in the video element and then they would scan .....if you wanted to do that....but why ?
 
 iv) This was written for use in Poodll on Moodle and there we use the nice logging functions available in that environment. Its the only dependency we added. It doesn't even use jquery.
- So if you want to use this elsewhere, just replace all calls to log.debug() with calls to console.log() in poodll_qrscanner.js
+So if you want to use this elsewhere, just replace all calls to log.debug() with calls to console.log() in poodll_qrscanner.js
+
+v) You only need to include the poodll_qrscanner.js file in your project, All the code from other js files in the original project is in there.
 
